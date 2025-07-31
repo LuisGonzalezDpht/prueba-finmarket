@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import constants from '@/assets/constants'
 import type { rangeDate } from '@/assets/type/range.type'
-import { getUltimaFecha } from '@/composable/useComparators'
+import { getLastDate } from '@/composable/useComparators'
 import { useGlobalStore } from '@/stores/global.store'
 import { CalendarDateRangeIcon } from '@heroicons/vue/24/solid'
 import { AreaSeries, createChart, type IChartApi, type ISeriesApi } from 'lightweight-charts'
@@ -9,12 +9,11 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 const globalStore = useGlobalStore()
 
-const areaPoints = computed(() => globalStore.historyArea!!)
-const seleccionado = computed(() => globalStore.seleccionado)
+const areaPoints = computed(() => globalStore.historyArea)
 
 let chart: IChartApi | null
 const chartContainer = ref()
-let areaSeries: ISeriesApi<'Area', any>
+let areaSeries: ISeriesApi<'Area'>
 
 const sortBy = ref<rangeDate | null>(null)
 
@@ -45,7 +44,7 @@ onMounted(async () => {
   })
 
   if (sortBy.value) {
-    areaSeries.setData(getUltimaFecha(areaPoints.value, sortBy.value))
+    areaSeries.setData(getLastDate(areaPoints.value, sortBy.value))
   } else {
     areaSeries.setData(areaPoints.value)
   }
@@ -53,17 +52,21 @@ onMounted(async () => {
   chart.timeScale().fitContent()
 })
 
-watch([seleccionado, sortBy], (newValue, oldValue) => {
-  if (newValue != oldValue && areaPoints.value && areaPoints.value.length > 0) {
-    if (sortBy.value) {
-      areaSeries.setData(getUltimaFecha(areaPoints.value, sortBy.value))
-    } else {
-      areaSeries.setData(areaPoints.value)
-    }
+watch(
+  [areaPoints, sortBy],
+  ([areaPointValue], [sortByValue]) => {
+    if (areaPointValue && areaPointValue.length > 0) {
+      if (sortBy.value && sortByValue) {
+        areaSeries.setData(getLastDate(areaPoints.value, sortBy.value))
+      } else {
+        areaSeries.setData(areaPoints.value)
+      }
 
-    chart?.timeScale().fitContent()
-  }
-})
+      chart?.timeScale().fitContent()
+    }
+  },
+  { deep: true },
+)
 
 onUnmounted(() => {
   if (chart) {
@@ -79,7 +82,7 @@ onUnmounted(() => {
     <div class="bg-neutral-900 p-2 rounded-lg border border-neutral-800 flex justify-center gap-2">
       <el-button-group size="small">
         <el-button
-          v-for="(item, index) in constants.buttons_fechas"
+          v-for="(item, index) in constants.btn_dates"
           :key="index"
           :type="sortBy ? (sortBy === item ? 'primary' : 'ghost') : 'ghost'"
           @click="sortBy = item"

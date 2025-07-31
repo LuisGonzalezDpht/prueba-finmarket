@@ -9,4 +9,10 @@ function formatPrices(price: number) {
   return priceFormatted.format(price)
 }
 
-export { formatPrices }
+function justALineInTheDate(date: string) {
+  const dateFormat = date.split(' ')
+
+  return dateFormat.join(' - ')
+}
+
+export { formatPrices, justALineInTheDate }

@@ -7,14 +7,14 @@ import { computed, onMounted } from 'vue'
 const globalStore = useGlobalStore()
 
 onMounted(async () => {
-  await globalStore.getResumen()
+  await globalStore.getSummary()
 })
 
-const resumen = computed(() => globalStore.resumenData!!)
+const resumen = computed(() => globalStore.summaryData!)
 </script>
 
 <template>
-  <div v-if="globalStore.resumenData" class="grid gap-y-3">
+  <div v-if="globalStore.summaryData" class="grid gap-y-3">
     <h1>
       {{ `${resumen.data.info.codeInstrument}, ${resumen.data.info.countryName}` }}
     </h1>

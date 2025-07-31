@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useBuscadorStore } from './dataBuscador.store'
+import { useSearchStore } from './search.store'
 import type ResumenInterface from '@/assets/interface/resumen.interface'
 import { computed, ref, watch } from 'vue'
 import { getAPI } from '@/api'
@@ -8,25 +8,25 @@ import type HistoryInterface from '@/assets/interface/history.interface'
 import type { AreaInterface } from '@/assets/interface/history.interface'
 
 export const useGlobalStore = defineStore('globalStore', () => {
-  const buscadorStore = useBuscadorStore()
-  const seleccionado = computed(() => buscadorStore.seleccionado)
+  const searchStore = useSearchStore()
+  const selected = computed(() => searchStore.selected)
 
-  const resumenData = ref<ResumenInterface | null>(null)
+  const summaryData = ref<ResumenInterface | null>(null)
 
-  async function getResumen() {
-    let buscador = seleccionado.value
-    if (buscador === '') buscador = constants.default.toUpperCase()
+  async function getSummary() {
+    let searchRes = selected.value
+    if (searchRes === '') searchRes = constants.default.toUpperCase()
 
-    const response = await getAPI<ResumenInterface>(`/data/resumen/${buscador}.json`)
+    const response = await getAPI<ResumenInterface>(`/data/resumen/${searchRes}.json`)
 
     if (response.status && response.data) {
       const data = response.data
 
-      resumenData.value = data
+      summaryData.value = data
     }
   }
 
-  watch(seleccionado, async (newValue, oldValue) => {
+  watch(selected, async (newValue, oldValue) => {
     if (newValue != oldValue) {
       await getHistory()
     }
@@ -35,10 +35,10 @@ export const useGlobalStore = defineStore('globalStore', () => {
   const historyData = ref<HistoryInterface | null>(null)
 
   async function getHistory() {
-    let buscador = buscadorStore.seleccionado
-    if (buscador === '') buscador = constants.default.toUpperCase()
+    let searchRes = searchStore.selected
+    if (searchRes === '') searchRes = constants.default.toUpperCase()
 
-    const response = await getAPI<HistoryInterface>(`/data/history/history-${buscador}.json`)
+    const response = await getAPI<HistoryInterface>(`/data/history/history-${searchRes}.json`)
 
     if (response.status && response.data) {
       const data = response.data
@@ -61,7 +61,9 @@ export const useGlobalStore = defineStore('globalStore', () => {
         } as AreaInterface
       })
     }
+
+    return []
   })
 
-  return { getResumen, resumenData, getHistory, historyData, historyArea, seleccionado }
+  return { getSummary, summaryData, getHistory, historyData, historyArea, selected }
 })

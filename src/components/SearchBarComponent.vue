@@ -1,42 +1,40 @@
 <script lang="ts" setup>
 import constants from '@/assets/constants'
-import { useBuscadorStore } from '@/stores/dataBuscador.store'
+import { useSearchStore } from '@/stores/search.store'
 import { useGlobalStore } from '@/stores/global.store'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { computed, onMounted, ref, watch } from 'vue'
 
-const buscadorStore = useBuscadorStore()
+const buscadorStore = useSearchStore()
 const globalStore = useGlobalStore()
 
 onMounted(async () => {
-  await buscadorStore.getDataBuscador()
+  await buscadorStore.getSearchData()
 })
 
-const resultadoBusqueda = ref('')
+const searchRes = ref('')
 
-const instrumentosFiltrados = computed(() => {
-  const lista = buscadorStore.listaBuscador
+const instrumentosFilter = computed(() => {
+  const lista = buscadorStore.searchList
 
-  return lista
-    .filter((item) => item.toLowerCase().includes(resultadoBusqueda.value.toLowerCase()))
-    .sort()
+  return lista.filter((item) => item.toLowerCase().includes(searchRes.value.toLowerCase())).sort()
 })
 
 /**
  * este watch sirve para seleccionar el elemento buscado en la store
  */
-watch(resultadoBusqueda, (value) => {
-  const fnd = instrumentosFiltrados.value.find((f) => f.toLowerCase() === value.toLowerCase())
+watch(searchRes, (value) => {
+  const fnd = instrumentosFilter.value.find((f) => f.toLowerCase() === value.toLowerCase())
 
   if (fnd) {
-    buscadorStore.seleccionado = fnd
+    buscadorStore.selected = fnd
   } else {
-    buscadorStore.seleccionado = instrumentosFiltrados.value.find(
+    buscadorStore.selected = instrumentosFilter.value.find(
       (f) => f.toLowerCase() === constants.default,
-    )!!
+    )!
   }
 
-  globalStore.getResumen()
+  globalStore.getSummary()
 })
 
 /**
@@ -67,7 +65,7 @@ function changeFocused(blur: boolean) {
     <el-input
       @focus="changeFocused(false)"
       @blur="changeFocused(true)"
-      v-model="resultadoBusqueda"
+      v-model="searchRes"
       placeholder="Busca un instrumento"
       :prefix-icon="MagnifyingGlassIcon"
       class="w-full"
@@ -79,9 +77,9 @@ function changeFocused(blur: boolean) {
       >
         <li
           class="hover:bg-neutral-700 p-2 cursor-pointer"
-          v-for="(item, index) in instrumentosFiltrados"
+          v-for="(item, index) in instrumentosFilter"
           :key="index"
-          @click="resultadoBusqueda = item"
+          @click="searchRes = item"
         >
           {{ item }}
         </li>
