@@ -2,6 +2,7 @@ function formatPrices(price: number) {
   const priceFormatted = new Intl.NumberFormat('es-CL', {
     // style: 'currency',
     minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
     currency: 'CLP',
   })
 

@@ -22,7 +22,35 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 <template>
   <div class="mt-8 px-3">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="tabs_">
-      <el-tab-pane label="Resumen" name="first">resumen</el-tab-pane>
+      <el-tab-pane label="Resumen" name="first">
+        <div
+          class="space-y-1 text-sm [&>div>p]:flex [&>div>p]:justify-between [&>div>p>b]:uppercase [&>div>p>b]:font-semibold [&>div>p>span]:text-right"
+        >
+          <div>
+            <p>
+              <b>Nombre Instrumento</b>
+              <span>{{ summary?.data.info.name }}</span>
+            </p>
+          </div>
+          <hr />
+          <div class="space-y-1">
+            <p>
+              <b>Ultimo Precio</b>
+              <span>{{ formatPrices(summary?.data.price.lastPrice!!) }}</span>
+            </p>
+            <p>
+              <b>Hora del último precio</b>
+              <span>{{ summary?.data.price.datetimeLastPrice }}</span>
+            </p>
+            <p>
+              <b>Moneda</b>
+              <span>
+                {{ `${summary?.data.info.currencyName} - ${summary?.data.info.currencySymbol}` }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="Detalles" name="second">
         <div
           class="space-y-1 text-sm [&>div>p]:flex [&>div>p]:justify-between [&>div>p>b]:uppercase [&>div>p>b]:font-semibold"
