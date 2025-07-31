@@ -1,0 +1,38 @@
+/* imports */
+@import "tailwindcss";
+
+/* globales */
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 200ms ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+hr {
+    @apply border-neutral-600
+}
+
+h1 {
+    @apply text-2xl font-semibold
+}
+
+h2 {
+    @apply text-xl font-semibold
+}
+
+h3 {
+    @apply text-lg font-semibold
+}
+
+h4 {
+    @apply text-sm font-semibold
+}
