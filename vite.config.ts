@@ -17,12 +17,12 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
     Components({
-      resolvers: [ElementPlusResolver()]
-    })
+      resolvers: [ElementPlusResolver()],
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })

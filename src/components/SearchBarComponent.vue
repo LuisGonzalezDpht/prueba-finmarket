@@ -5,17 +5,17 @@ import { useGlobalStore } from '@/stores/global.store'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { computed, onMounted, ref, watch } from 'vue'
 
-const buscadorStore = useSearchStore()
+const searchStore = useSearchStore()
 const globalStore = useGlobalStore()
 
 onMounted(async () => {
-  await buscadorStore.getSearchData()
+  await searchStore.getSearchData()
 })
 
 const searchRes = ref('')
 
 const instrumentosFilter = computed(() => {
-  const lista = buscadorStore.searchList
+  const lista = searchStore.searchList
 
   return lista.filter((item) => item.toLowerCase().includes(searchRes.value.toLowerCase())).sort()
 })
@@ -27,9 +27,9 @@ watch(searchRes, (value) => {
   const fnd = instrumentosFilter.value.find((f) => f.toLowerCase() === value.toLowerCase())
 
   if (fnd) {
-    buscadorStore.selected = fnd
+    searchStore.selected = fnd
   } else {
-    buscadorStore.selected = instrumentosFilter.value.find(
+    searchStore.selected = instrumentosFilter.value.find(
       (f) => f.toLowerCase() === constants.default,
     )!
   }

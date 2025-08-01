@@ -21,7 +21,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
 <template>
   <div class="mt-8 px-3">
-    <el-tabs v-model="activeName" @tab-click="handleClick" class="tabs_">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="Resumen" name="first">
         <div
           class="space-y-1 text-sm [&>div>p]:flex [&>div>p]:justify-between [&>div>p>b]:uppercase [&>div>p>b]:font-semibold [&>div>p>span]:text-right"

@@ -6,6 +6,7 @@ import { getAPI } from '@/api'
 import constants from '@/assets/constants'
 import type HistoryInterface from '@/assets/interface/history.interface'
 import type { AreaInterface } from '@/assets/interface/history.interface'
+import type ConstituyenteInterface from '@/assets/interface/constituyente.interface'
 
 export const useGlobalStore = defineStore('globalStore', () => {
   const searchStore = useSearchStore()
@@ -29,6 +30,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
   watch(selected, async (newValue, oldValue) => {
     if (newValue != oldValue) {
       await getHistory()
+      await getSummary()
     }
   })
 
@@ -65,5 +67,28 @@ export const useGlobalStore = defineStore('globalStore', () => {
     return []
   })
 
-  return { getSummary, summaryData, getHistory, historyData, historyArea, selected }
+  const constituyentData = ref<ConstituyenteInterface | null>(null)
+
+  async function getConstituyent() {
+    const response = await getAPI<ConstituyenteInterface>(
+      `/data/constituyentes/constituensList.json`,
+    )
+
+    if (response.status && response.data) {
+      const data = response.data
+
+      constituyentData.value = data
+    }
+  }
+
+  return {
+    getSummary,
+    summaryData,
+    getHistory,
+    historyData,
+    historyArea,
+    selected,
+    getConstituyent,
+    constituyentData,
+  }
 })
