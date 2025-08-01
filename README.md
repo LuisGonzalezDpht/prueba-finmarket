@@ -2,7 +2,9 @@
 
 Esta es una prueba tecnica creada por Luis Gonzalez para finmarket.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+En esta prueba use librerias como element-plus y lightweight charts, para los tests use Vitest con Vue Utils Test.
+
+Cree un README-TESTING detallando algunos puntos que me faltarón por concretar.
 
 ## Project Setup
 
