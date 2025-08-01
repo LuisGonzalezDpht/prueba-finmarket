@@ -17,6 +17,7 @@ interface Info {
 }
 
 export interface Constituents {
+  [key: string]: string | number
   codeInstrument: string
   name: string
   shortName: string

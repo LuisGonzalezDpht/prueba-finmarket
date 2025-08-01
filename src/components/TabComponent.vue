@@ -17,23 +17,34 @@ onMounted(async () => {
   await globalStore.getConstituyent()
 })
 
-const contituyent = computed(() => {
-  if (
-    globalStore.constituyentData &&
-    globalStore.constituyentData.data.info.codeInstrument.toLowerCase() === activeName.value
-  ) {
-    return globalStore.constituyentData.data.constituents
-  }
-
-  return null
-})
-
 const list_div = computed(() => {
-  if (contituyent.value) {
-    const mitad = Math.ceil(contituyent.value.length / 2)
+  const data = globalStore.constituyentData
 
-    return [contituyent.value.slice(0, mitad), contituyent.value.slice(mitad)]
+  if (data && data.data.info.codeInstrument.toLowerCase() === activeName.value) {
+    let list = [...data.data.constituents] // se clona para no modificar el original
+
+    if (globalStore.filterSelected !== '') {
+      list = list.sort((a, b) => {
+        console.log(globalStore.filterSelected)
+        const itemA = a[globalStore.filterSelected]
+        const itemB = b[globalStore.filterSelected]
+
+        if (typeof itemA === 'string' && typeof itemB === 'string') {
+          return itemB.localeCompare(itemA)
+        }
+
+        if (typeof itemA === 'number' && typeof itemB === 'number') {
+          return itemB - itemA
+        }
+
+        return 0
+      })
+    }
+
+    const mitad = Math.ceil(list.length / 2)
+    return [list.slice(0, mitad), list.slice(mitad)]
   }
+
   return [[], []]
 })
 </script>
@@ -47,7 +58,7 @@ const list_div = computed(() => {
         :label="item.toUpperCase()"
         :name="item"
       >
-        <div class="grid md:grid-cols-2 grid-cols-1 gap-5">
+        <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
           <InstrumentListComponent v-for="(item, index) in list_div" :key="index" :list="item" />
         </div>
       </el-tab-pane>

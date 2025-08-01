@@ -67,6 +67,8 @@ export const useGlobalStore = defineStore('globalStore', () => {
     return []
   })
 
+  const filterSelected = ref<string>('')
+
   const constituyentData = ref<ConstituyenteInterface | null>(null)
 
   async function getConstituyent() {
@@ -90,5 +92,6 @@ export const useGlobalStore = defineStore('globalStore', () => {
     selected,
     getConstituyent,
     constituyentData,
+    filterSelected,
   }
 })
